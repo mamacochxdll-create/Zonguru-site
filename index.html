@@ -3,219 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Concentrix Platform</title>
+    <title>Concentrix VIP Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --main: #005a7d; --bg: #f8fafc; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--main); overflow: hidden; font-family: sans-serif; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--main); font-family: sans-serif; overflow: hidden; }
         .view { display: none; width: 100%; height: 100vh; position: absolute; top: 0; left: 0; background: var(--bg); overflow-y: auto; }
         .view.active { display: block; z-index: 50; }
-        .input-box { width: 100%; padding: 15px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; outline: none; margin-bottom: 15px; }
-        .btn-main { width: 100%; padding: 16px; background: var(--main); color: white; border-radius: 12px; font-weight: bold; }
+        .input-box { width: 100%; padding: 15px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; outline: none; margin-bottom: 10px; }
+        .btn-main { width: 100%; padding: 16px; background: var(--main); color: white; border-radius: 12px; font-weight: bold; text-align: center; display: block; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: none; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
-        .nav-item { color: #94a3b8; text-align: center; font-size: 10px; flex: 1; }
+        .nav-item { color: #94a3b8; text-align: center; font-size: 10px; flex: 1; cursor: pointer; }
         .nav-item.active { color: var(--main); font-weight: bold; }
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; background: white; padding: 12px 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: none; }
+        .record-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-bottom: 2px dashed #eee; }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; background: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; width: 85%; border-left: 5px solid #14b8a6; }
     </style>
 </head>
 <body>
 
-    <div id="toast-msg" class="toast"></div>
+    <div id="toast" class="toast"></div>
 
-    <div id="register-view" class="view active flex flex-col bg-[#005a7d]">
-        <div class="py-16 text-center"><h1 class="text-4xl font-black italic text-white uppercase">concentrix</h1></div>
-        <div class="bg-white w-full rounded-t-[30px] p-8 mt-auto">
-            <h2 class="text-2xl font-bold mb-6">Register</h2>
-            <input type="text" id="reg-user" class="input-box" placeholder="Username">
-            <input type="password" id="reg-pass" class="input-box" placeholder="Password">
-            <input type="text" id="reg-code" class="input-box" placeholder="Invitation Code">
-            <button onclick="handleRegister()" class="btn-main">Create Account</button>
-            <p class="text-center mt-6 text-sm text-gray-400">Already have an account? <span class="text-[#005a7d] font-bold" onclick="navigateTo('login-view')">Login</span></p>
-        </div>
-    </div>
-
-    <div id="login-view" class="view flex flex-col bg-[#005a7d]">
-        <div class="py-16 text-center"><h1 class="text-4xl font-black italic text-white uppercase">concentrix</h1></div>
-        <div class="bg-white w-full rounded-t-[30px] p-8 mt-auto">
-            <h2 class="text-2xl font-bold mb-6">Login</h2>
-            <input type="text" id="login-user" class="input-box" placeholder="Username">
-            <input type="password" id="login-pass" class="input-box" placeholder="Password">
-            <button onclick="handleLogin()" class="btn-main">Login Now</button>
-            <p class="text-center mt-6 text-sm text-gray-400">New user? <span class="text-[#005a7d] font-bold" onclick="navigateTo('register-view')">Register</span></p>
-        </div>
-    </div>
-
-    <div id="home-view" class="view">
-        <div class="bg-[#005a7d] p-8 pb-16 text-white rounded-b-[40px]">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-2xl font-black italic">concentrix</h1>
-                <i class="fas fa-headset text-xl" onclick="navigateTo('cs-view')"></i>
-            </div>
-            <div class="bg-white/10 p-6 rounded-3xl backdrop-blur-md border border-white/20">
-                <p class="text-xs opacity-70 mb-1">Total Assets</p>
-                <h2 id="balance-txt" class="text-4xl font-black">$ 0.00</h2>
-                <div class="flex gap-4 mt-6">
-                    <button onclick="navigateTo('deposit-view')" class="flex-1 bg-white text-[#005a7d] py-3 rounded-xl font-bold">Deposit</button>
-                    <button onclick="navigateTo('withdraw-view')" class="flex-1 bg-teal-500 text-white py-3 rounded-xl font-bold">Withdraw</button>
-                </div>
-            </div>
-        </div>
-        <div class="p-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm flex justify-between items-center border-l-4 border-yellow-400" onclick="navigateTo('task-view')">
-                <div><h4 class="font-bold text-[#005a7d]">VIP 1 Optimization</h4><p class="text-xs text-gray-400">Min Balance: $100</p></div>
-                <i class="fas fa-chevron-right text-gray-300"></i>
-            </div>
-        </div>
-    </div>
-
-    <div id="task-view" class="view bg-gray-50">
-        <div class="p-5 bg-white border-b flex justify-between items-center sticky top-0 z-50">
-            <i class="fas fa-chevron-left" onclick="navigateTo('home-view')"></i>
-            <span class="font-bold">OPTIMIZATION</span>
-            <span id="prog-txt" class="text-xs font-black">0 / 40</span>
-        </div>
-        <div id="grid" class="grid grid-cols-2 gap-4 p-5 pb-40"></div>
-    </div>
-
-    <div id="profile-view" class="view">
-        <div class="bg-[#005a7d] text-center p-12 text-white">
-            <div class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">👤</div>
-            <h2 id="u-name" class="text-xl font-bold">Member</h2>
-        </div>
-        <div class="p-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm flex justify-between items-center text-red-500" onclick="location.reload()">
-                <span>Logout</span><i class="fas fa-sign-out-alt"></i>
-            </div>
-        </div>
-    </div>
-
-    <div id="admin-view" class="view bg-slate-900 text-white">
-        <div class="p-5 bg-black flex justify-between">
-            <span class="font-bold text-red-500">USER MANAGEMENT (BACKEND)</span>
-            <button onclick="navigateTo('home-view')" class="text-xs bg-gray-700 px-3 py-1">EXIT</button>
-        </div>
-        <div class="p-6">
-            <h3 class="mb-4 font-bold">Registered Users:</h3>
-            <div id="admin-user-list" class="space-y-3 mb-8">
-                </div>
-
-            <div id="edit-panel" class="hidden bg-gray-800 p-5 rounded-xl border border-blue-500">
-                <h4 class="text-blue-400 font-bold mb-4">Editing: <span id="editing-username"></span></h4>
-                <p class="text-xs mb-2 text-gray-400">Adjust Balance</p>
-                <input type="number" id="adm-set-bal" class="input-box bg-gray-700 text-white border-none" placeholder="Enter Amount">
-                <p class="text-xs mb-2 text-gray-400">Set Lucky Order At (0 = No Lucky)</p>
-                <input type="number" id="adm-set-lucky" class="input-box bg-gray-700 text-white border-none" placeholder="Order No.">
-                <button onclick="applyAdminChanges()" class="w-full bg-blue-600 py-3 rounded-lg font-bold">Save All Changes</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="bottom-nav" id="bot-nav">
-        <div class="nav-item" onclick="navigateTo('home-view')"><i class="fas fa-home text-xl"></i><p>Home</p></div>
-        <div class="nav-item" onclick="navigateTo('task-view')"><i class="fas fa-bolt text-xl"></i><p>Task</p></div>
-        <div class="nav-item" onclick="navigateTo('profile-view')"><i class="fas fa-user-circle text-xl"></i><p>Profile</p></div>
-    </div>
-
-    <script>
-        let currentUser = null;
-        let users = JSON.parse(localStorage.getItem('platform_users')) || [];
-
-        function showToast(m) { 
-            const t = document.getElementById('toast-msg');
-            t.innerText = m; t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3000);
-        }
-
-        function navigateTo(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            const hide = ['register-view', 'login-view', 'admin-view'];
-            document.getElementById('bot-nav').style.display = hide.includes(id) ? 'none' : 'flex';
-            if(id === 'admin-view') loadAdminUserList();
-        }
-
-        function handleRegister() {
-            const u = document.getElementById('reg-user').value.trim();
-            const p = document.getElementById('reg-pass').value.trim();
-            if(!u || !p) return alert("Fill all info!");
-            if(users.find(x => x.username === u)) return alert("User already exists!");
-
-            const newUser = { username: u, password: p, balance: 0, profit: 0, count: 0, luckyTarget: 0 };
-            users.push(newUser);
-            localStorage.setItem('platform_users', JSON.stringify(users));
-            showToast("Account Created!");
-            navigateTo('login-view');
-        }
-
-        function handleLogin() {
-            const u = document.getElementById('login-user').value.trim();
-            const p = document.getElementById('login-pass').value.trim();
-            const found = users.find(x => x.username === u && x.password === p);
-
-            if(found) {
-                currentUser = found;
-                document.getElementById('u-name').innerText = u;
-                updateUI();
-                navigateTo('home-view');
-            } else {
-                alert("Invalid Username or Password!");
-            }
-        }
-
-        function loadAdminUserList() {
-            const list = document.getElementById('admin-user-list');
-            list.innerHTML = "";
-            users.forEach(u => {
-                list.innerHTML += `
-                <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center border border-gray-700">
-                    <div>
-                        <p class="font-bold">${u.username}</p>
-                        <p class="text-[10px] text-gray-400">Bal: $${u.balance} | Lucky: ${u.luckyTarget}</p>
-                    </div>
-                    <button onclick="openEditPanel('${u.username}')" class="bg-blue-600 px-3 py-1 rounded text-xs">Edit</button>
-                </div>`;
-            });
-        }
-
-        let editingName = "";
-        function openEditPanel(name) {
-            editingName = name;
-            const u = users.find(x => x.username === name);
-            document.getElementById('editing-username').innerText = name;
-            document.getElementById('adm-set-bal').value = u.balance;
-            document.getElementById('adm-set-lucky').value = u.luckyTarget;
-            document.getElementById('edit-panel').classList.remove('hidden');
-        }
-
-        function applyAdminChanges() {
-            const u = users.find(x => x.username === editingName);
-            u.balance = parseFloat(document.getElementById('adm-set-bal').value);
-            u.luckyTarget = parseInt(document.getElementById('adm-set-lucky').value);
-            
-            localStorage.setItem('platform_users', JSON.stringify(users));
-            if(currentUser && currentUser.username === editingName) {
-                currentUser = u;
-                updateUI();
-            }
-            showToast("User Data Updated!");
-            loadAdminUserList();
-            document.getElementById('edit-panel').classList.add('hidden');
-        }
-
-        function updateUI() {
-            if(!currentUser) return;
-            document.getElementById('balance-txt').innerText = `$ ${currentUser.balance.toFixed(2)}`;
-            document.getElementById('balance-txt').style.color = currentUser.balance < 0 ? "#ff4d4d" : "white";
-        }
-
-        // Hidden Entry: Click Username in Profile 5 times to enter Backend
-        let clicks = 0;
-        document.addEventListener('click', (e) => {
-            if(e.target.id === 'u-name') {
-                clicks++; if(clicks >= 5) { clicks = 0; navigateTo('admin-view'); }
-            }
-        });
-    </script>
-</body>
-</html>
+    <div id="register-view" class="view active flex flex-col bg-[#005a7d]
