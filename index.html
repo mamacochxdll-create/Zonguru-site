@@ -8,55 +8,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --main: #005a7d; --bg: #f8fafc; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--main); overflow: hidden; font-family: sans-serif; }
         .view { display: none; width: 100%; height: 100vh; position: absolute; top: 0; left: 0; background: var(--bg); overflow-y: auto; }
         .view.active { display: block; z-index: 50; }
         .input-box { width: 100%; padding: 15px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; outline: none; margin-bottom: 15px; }
         .btn-main { width: 100%; padding: 16px; background: var(--main); color: white; border-radius: 12px; font-weight: bold; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: none; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: none; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
         .nav-item { color: #94a3b8; text-align: center; font-size: 10px; flex: 1; }
         .nav-item.active { color: var(--main); font-weight: bold; }
-        
-        /* Product Image Styling - High Compatibility */
-        .product-card { background: white; p: 16px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
-        .image-container { width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; background: white; overflow: hidden; border-radius: 12px; }
-        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-        /* Notification Toasts */
-        #notification-box { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 350px; }
-        .toast { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; border-left: 5px solid #14b8a6; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; background: white; padding: 12px 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: none; }
     </style>
 </head>
 <body>
 
-    <div id="notification-box"></div>
+    <div id="toast-msg" class="toast"></div>
 
-    <div id="register-view" class="view active flex flex-col items-center justify-center bg-[#005a7d]">
-        <div class="py-10"><h1 class="text-4xl font-black italic text-white uppercase">concentrix</h1></div>
-        <div class="bg-white w-full rounded-t-[30px] p-8 mt-auto shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Register Account</h2>
+    <div id="register-view" class="view active flex flex-col bg-[#005a7d]">
+        <div class="py-16 text-center"><h1 class="text-4xl font-black italic text-white uppercase">concentrix</h1></div>
+        <div class="bg-white w-full rounded-t-[30px] p-8 mt-auto">
+            <h2 class="text-2xl font-bold mb-6">Register</h2>
             <input type="text" id="reg-user" class="input-box" placeholder="Username">
             <input type="password" id="reg-pass" class="input-box" placeholder="Password">
-            <input type="text" id="reg-code" class="input-box" placeholder="Invitation Code (LUCKY777)">
+            <input type="text" id="reg-code" class="input-box" placeholder="Invitation Code">
             <button onclick="handleRegister()" class="btn-main">Create Account</button>
-            <p class="text-center mt-6 text-sm text-gray-400">Already a member? <span class="text-[#005a7d] font-bold" onclick="navigateTo('login-view')">Login</span></p>
+            <p class="text-center mt-6 text-sm text-gray-400">Already have an account? <span class="text-[#005a7d] font-bold" onclick="navigateTo('login-view')">Login</span></p>
         </div>
     </div>
 
-    <div id="login-view" class="view flex flex-col items-center justify-center bg-[#005a7d]">
-        <div class="py-10"><h1 class="text-4xl font-black italic text-white uppercase">concentrix</h1></div>
-        <div class="bg-white w-full rounded-t-[30px] p-8 mt-auto shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Login</h2>
+    <div id="login-view" class="view flex flex-col bg-[#005a7d]">
+        <div class="py-16 text-center"><h1 class="text-4xl font-black italic text-white uppercase">concentrix</h1></div>
+        <div class="bg-white w-full rounded-t-[30px] p-8 mt-auto">
+            <h2 class="text-2xl font-bold mb-6">Login</h2>
             <input type="text" id="login-user" class="input-box" placeholder="Username">
             <input type="password" id="login-pass" class="input-box" placeholder="Password">
             <button onclick="handleLogin()" class="btn-main">Login Now</button>
+            <p class="text-center mt-6 text-sm text-gray-400">New user? <span class="text-[#005a7d] font-bold" onclick="navigateTo('register-view')">Register</span></p>
         </div>
     </div>
 
     <div id="home-view" class="view">
-        <div class="bg-[#005a7d] p-8 pb-16 text-white rounded-b-[40px] shadow-lg">
+        <div class="bg-[#005a7d] p-8 pb-16 text-white rounded-b-[40px]">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-2xl font-black italic">concentrix</h1>
                 <i class="fas fa-headset text-xl" onclick="navigateTo('cs-view')"></i>
@@ -65,115 +56,57 @@
                 <p class="text-xs opacity-70 mb-1">Total Assets</p>
                 <h2 id="balance-txt" class="text-4xl font-black">$ 0.00</h2>
                 <div class="flex gap-4 mt-6">
-                    <button onclick="navigateTo('deposit-view')" class="flex-1 bg-white text-[#005a7d] py-3 rounded-xl font-bold shadow-md">Deposit</button>
-                    <button onclick="navigateTo('withdraw-view')" class="flex-1 bg-teal-500 text-white py-3 rounded-xl font-bold shadow-md">Withdraw</button>
+                    <button onclick="navigateTo('deposit-view')" class="flex-1 bg-white text-[#005a7d] py-3 rounded-xl font-bold">Deposit</button>
+                    <button onclick="navigateTo('withdraw-view')" class="flex-1 bg-teal-500 text-white py-3 rounded-xl font-bold">Withdraw</button>
                 </div>
             </div>
         </div>
         <div class="p-6">
             <div class="bg-white p-5 rounded-2xl shadow-sm flex justify-between items-center border-l-4 border-yellow-400" onclick="navigateTo('task-view')">
-                <div><h4 class="font-bold text-[#005a7d]">VIP 1 Level</h4><p class="text-xs text-gray-400">Min Balance: $100</p></div>
-                <i class="fas fa-bolt text-yellow-400"></i>
+                <div><h4 class="font-bold text-[#005a7d]">VIP 1 Optimization</h4><p class="text-xs text-gray-400">Min Balance: $100</p></div>
+                <i class="fas fa-chevron-right text-gray-300"></i>
             </div>
         </div>
     </div>
 
     <div id="task-view" class="view bg-gray-50">
-        <div class="p-5 bg-white border-b flex justify-between items-center sticky top-0 z-50 shadow-sm">
-            <i class="fas fa-chevron-left text-gray-400" onclick="navigateTo('home-view')"></i>
-            <span class="font-bold text-[#005a7d]">OPTIMIZATION</span>
-            <span id="prog-txt" class="text-xs font-black bg-blue-100 text-blue-600 px-3 py-1 rounded-full">0 / 40</span>
+        <div class="p-5 bg-white border-b flex justify-between items-center sticky top-0 z-50">
+            <i class="fas fa-chevron-left" onclick="navigateTo('home-view')"></i>
+            <span class="font-bold">OPTIMIZATION</span>
+            <span id="prog-txt" class="text-xs font-black">0 / 40</span>
         </div>
-        
-        <div id="grid" class="grid grid-cols-2 gap-4 p-5 pb-48">
-            </div>
-
-        <div class="fixed bottom-20 left-0 w-full p-5 z-50">
-            <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-100">
-                <p class="text-[10px] text-gray-400 uppercase font-bold mb-2">Today's Profit</p>
-                <h3 id="profit-txt" class="text-3xl font-black text-teal-600 mb-4">$ 0.00</h3>
-                <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-                    <div id="prog-bar" class="bg-teal-500 h-full w-0 transition-all duration-300"></div>
-                </div>
-            </div>
-        </div>
+        <div id="grid" class="grid grid-cols-2 gap-4 p-5 pb-40"></div>
     </div>
 
-    <div id="deposit-view" class="view bg-white">
-        <div class="p-5 bg-[#005a7d] text-white flex items-center gap-4">
-            <i class="fas fa-chevron-left" onclick="navigateTo('home-view')"></i><span class="font-bold">Deposit Crypto</span>
+    <div id="profile-view" class="view">
+        <div class="bg-[#005a7d] text-center p-12 text-white">
+            <div class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">👤</div>
+            <h2 id="u-name" class="text-xl font-bold">Member</h2>
         </div>
         <div class="p-6">
-            <div class="bg-gray-100 p-6 rounded-2xl text-center mb-8 border">
-                <p class="text-xs text-gray-400 mb-4 uppercase tracking-widest">TRC20 Address</p>
-                <p class="text-sm font-mono font-bold break-all mb-4 text-gray-700">TTr9zE2S6nQ4WvLp89aXqR7mY3vK1uH7z</p>
-                <button onclick="showToast('Address Copied!', 'success')" class="text-teal-600 font-bold">Copy Address</button>
-            </div>
-            <button onclick="handleDeposit()" class="btn-main">Transfer Completed</button>
-        </div>
-    </div>
-
-    <div id="withdraw-view" class="view bg-white">
-        <div class="p-5 bg-[#005a7d] text-white flex items-center gap-4">
-            <i class="fas fa-chevron-left" onclick="navigateTo('home-view')"></i><span class="font-bold">Withdrawal</span>
-        </div>
-        <div class="p-6">
-            <div class="bg-teal-50 p-6 rounded-2xl mb-8 border border-teal-100 text-center">
-                <p class="text-xs text-teal-600 uppercase font-bold mb-1">AVAILABLE</p>
-                <h3 id="w-bal-txt" class="text-4xl font-black text-[#005a7d]">$ 6000.00</h3>
-            </div>
-            <input type="text" class="input-box" placeholder="TRC20 Wallet Address">
-            <input type="number" id="w-amount" class="input-box" placeholder="Amount (Min $100)">
-            <button onclick="handleWithdraw()" class="btn-main bg-gray-900 mt-4">Confirm Cash Out</button>
-        </div>
-    </div>
-
-    <div id="profile-view" class="view bg-gray-50">
-        <div class="bg-[#005a7d] text-center p-12 text-white rounded-b-[40px] shadow-lg">
-            <div class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl border-4 border-white/10">👤</div>
-            <h2 id="u-name" class="text-2xl font-black">Member</h2>
-            <p class="text-xs opacity-60">ID: 5509210</p>
-        </div>
-        <div class="p-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm flex justify-between items-center mb-4" onclick="navigateTo('cs-view')">
-                <div class="flex items-center gap-3 text-gray-700"><i class="fas fa-headset text-blue-500"></i><span>Contact Support</span></div>
-                <i class="fas fa-chevron-right text-gray-300"></i>
-            </div>
             <div class="bg-white p-5 rounded-2xl shadow-sm flex justify-between items-center text-red-500" onclick="location.reload()">
-                <div class="flex items-center gap-3"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
+                <span>Logout</span><i class="fas fa-sign-out-alt"></i>
             </div>
-        </div>
-    </div>
-
-    <div id="cs-view" class="view text-center">
-        <div class="p-5 bg-[#005a7d] text-white flex items-center gap-4 sticky top-0 z-50">
-            <i class="fas fa-chevron-left" onclick="navigateTo('home-view')"></i><span class="font-bold">Live Support</span>
-        </div>
-        <div class="p-12">
-            <i class="fab fa-telegram text-6xl text-blue-500 mb-6"></i>
-            <h3 class="text-2xl font-bold mb-3 text-gray-800">Online Agent</h3>
-            <p class="text-sm text-gray-400 mb-10">Connect with our official telegram support for any issues.</p>
-            <a href="https://t.me/your_admin_link" target="_blank" class="btn-main block shadow-lg">Open Telegram Chat</a>
         </div>
     </div>
 
     <div id="admin-view" class="view bg-slate-900 text-white">
-        <div class="p-5 bg-black flex justify-between items-center border-b border-gray-700">
-            <span class="font-bold text-red-500">SYSTEM BACKEND</span>
-            <button onclick="navigateTo('home-view')" class="text-xs bg-gray-700 px-3 py-1 rounded">EXIT</button>
+        <div class="p-5 bg-black flex justify-between">
+            <span class="font-bold text-red-500">USER MANAGEMENT (BACKEND)</span>
+            <button onclick="navigateTo('home-view')" class="text-xs bg-gray-700 px-3 py-1">EXIT</button>
         </div>
-        <div class="p-6 space-y-6 pb-20">
-            <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
-                <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider font-bold">LUCKY ORDER CONFIG (0 = Disabled)</p>
-                <input type="number" id="adm-target" class="input-box bg-gray-700 border-none text-white" placeholder="Order Number (e.g. 10)">
-                <input type="number" id="adm-price" class="input-box bg-gray-700 border-none text-white" placeholder="Product Price (e.g. 5000)">
-                <input type="number" id="adm-rate" class="input-box bg-gray-700 border-none text-white" placeholder="Commission % (e.g. 15)">
-                <button onclick="saveAdmin()" class="btn-main bg-blue-600 mt-2">Set Lucky Order</button>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
-                <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider font-bold">USER BALANCE</p>
-                <input type="number" id="adm-bal" class="input-box bg-gray-700 border-none text-white" placeholder="Set Balance">
-                <button onclick="updateBal()" class="btn-main bg-red-600">Update Balance</button>
+        <div class="p-6">
+            <h3 class="mb-4 font-bold">Registered Users:</h3>
+            <div id="admin-user-list" class="space-y-3 mb-8">
+                </div>
+
+            <div id="edit-panel" class="hidden bg-gray-800 p-5 rounded-xl border border-blue-500">
+                <h4 class="text-blue-400 font-bold mb-4">Editing: <span id="editing-username"></span></h4>
+                <p class="text-xs mb-2 text-gray-400">Adjust Balance</p>
+                <input type="number" id="adm-set-bal" class="input-box bg-gray-700 text-white border-none" placeholder="Enter Amount">
+                <p class="text-xs mb-2 text-gray-400">Set Lucky Order At (0 = No Lucky)</p>
+                <input type="number" id="adm-set-lucky" class="input-box bg-gray-700 text-white border-none" placeholder="Order No.">
+                <button onclick="applyAdminChanges()" class="w-full bg-blue-600 py-3 rounded-lg font-bold">Save All Changes</button>
             </div>
         </div>
     </div>
@@ -181,159 +114,108 @@
     <div class="bottom-nav" id="bot-nav">
         <div class="nav-item" onclick="navigateTo('home-view')"><i class="fas fa-home text-xl"></i><p>Home</p></div>
         <div class="nav-item" onclick="navigateTo('task-view')"><i class="fas fa-bolt text-xl"></i><p>Task</p></div>
-        <div class="nav-item" onclick="alert('No records found.')"><i class="fas fa-list text-xl"></i><p>Records</p></div>
         <div class="nav-item" onclick="navigateTo('profile-view')"><i class="fas fa-user-circle text-xl"></i><p>Profile</p></div>
     </div>
 
     <script>
-        // Global variables
-        let balance = 0.00; let profit = 0; let count = 0; let user = {n:"", p:""};
-        let lTarget = 0; let lPrice = 0; let lRate = 0.5;
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('platform_users')) || [];
 
-        // Amazon Product Links (High Compatibility)
-        const amazonProducts = [
-            {n:"Apple AirPods Pro (2nd Generation)", p:249, i:"https://m.media-amazon.com/images/I/61f1YfN713L._AC_SL1500_.jpg"},
-            {n:"Samsung Galaxy S24 Ultra", p:1299, i:"https://m.media-amazon.com/images/I/71R3m59h21L._AC_SL1500_.jpg"},
-            {n:"Logitech MX Master 3S Mouse", p:99, i:"https://m.media-amazon.com/images/I/61b1bYqO4aL._AC_SL1500_.jpg"},
-            {n:"Sony WH-1000XM5 Headphones", p:398, i:"https://m.media-amazon.com/images/I/61b-9-X5LIL._AC_SL1500_.jpg"},
-            {n:"Kindle Paperwhite (16 GB)", p:149, i:"https://m.media-amazon.com/images/I/71R3yX9L._AC_SL1500_.jpg"},
-            {n:"GoPro HERO12 Black", p:399, i:"https://m.media-amazon.com/images/I/61uGk5L8NRL._AC_SL1500_.jpg"}
-        ];
-
-        // Notification system
-        function showToast(msg, type) {
-            const box = document.getElementById('notification-box');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderLeftColor = type === 'success' ? '#14b8a6' : '#ef4444';
-            toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':'fa-exclamation-circle'}" style="color:${type==='success'?'#14b8a6':'#ef4444'}"></i> <span>${msg}</span>`;
-            box.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showToast(m) { 
+            const t = document.getElementById('toast-msg');
+            t.innerText = m; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        // Navigation
         function navigateTo(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            const hide = ['register-view', 'login-view', 'deposit-view', 'withdraw-view', 'cs-view', 'admin-view'];
+            const hide = ['register-view', 'login-view', 'admin-view'];
             document.getElementById('bot-nav').style.display = hide.includes(id) ? 'none' : 'flex';
-            if(id === 'task-view') renderGrid();
-            
-            // Highlight nav item
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            const navs = document.querySelectorAll('.nav-item');
-            if(id === 'home-view') navs[0].classList.add('active');
-            if(id === 'task-view') navs[1].classList.add('active');
-            if(id === 'profile-view') navs[3].classList.add('active');
+            if(id === 'admin-view') loadAdminUserList();
         }
 
-        // Auth
         function handleRegister() {
-            const u = document.getElementById('reg-user').value;
-            const p = document.getElementById('reg-pass').value;
-            if(document.getElementById('reg-code').value !== 'LUCKY777') return alert("Invalid Code!");
-            if(!u || !p) return alert("Fill all details!");
-            user = {n:u, p:p}; showToast("Registration Successful!", "success"); navigateTo('login-view');
+            const u = document.getElementById('reg-user').value.trim();
+            const p = document.getElementById('reg-pass').value.trim();
+            if(!u || !p) return alert("Fill all info!");
+            if(users.find(x => x.username === u)) return alert("User already exists!");
+
+            const newUser = { username: u, password: p, balance: 0, profit: 0, count: 0, luckyTarget: 0 };
+            users.push(newUser);
+            localStorage.setItem('platform_users', JSON.stringify(users));
+            showToast("Account Created!");
+            navigateTo('login-view');
         }
 
         function handleLogin() {
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
-            if(u === user.n && p === user.p && u !== "") {
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            const found = users.find(x => x.username === u && x.password === p);
+
+            if(found) {
+                currentUser = found;
                 document.getElementById('u-name').innerText = u;
+                updateUI();
                 navigateTo('home-view');
-                showToast("Welcome to Concentrix!", "success");
-            } else alert("Error!");
+            } else {
+                alert("Invalid Username or Password!");
+            }
         }
 
-        // Render Task Grid with Images
-        function renderGrid() {
-            const g = document.getElementById('grid'); g.innerHTML = "";
-            amazonProducts.forEach(item => {
-                g.innerHTML += `
-                <div class="product-card">
-                    <div class="image-container">
-                        <img src="${item.i}" alt="product">
+        function loadAdminUserList() {
+            const list = document.getElementById('admin-user-list');
+            list.innerHTML = "";
+            users.forEach(u => {
+                list.innerHTML += `
+                <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center border border-gray-700">
+                    <div>
+                        <p class="font-bold">${u.username}</p>
+                        <p class="text-[10px] text-gray-400">Bal: $${u.balance} | Lucky: ${u.luckyTarget}</p>
                     </div>
-                    <p class="font-bold text-sm text-gray-800">$ ${item.p}</p>
-                    <button onclick="doTask(this, ${item.p})" class="w-full bg-[#005a7d] text-white py-2.5 rounded-xl text-xs font-bold mt-3 active:scale-95 transition-all">OPTIMIZE</button>
+                    <button onclick="openEditPanel('${u.username}')" class="bg-blue-600 px-3 py-1 rounded text-xs">Edit</button>
                 </div>`;
             });
         }
 
-        // Optimization Task
-        function doTask(btn, price) {
-            // Min $100 Rule
-            if(balance < 100) {
-                showToast("Minimum $100 balance required to start!", "error");
-                return;
+        let editingName = "";
+        function openEditPanel(name) {
+            editingName = name;
+            const u = users.find(x => x.username === name);
+            document.getElementById('editing-username').innerText = name;
+            document.getElementById('adm-set-bal').value = u.balance;
+            document.getElementById('adm-set-lucky').value = u.luckyTarget;
+            document.getElementById('edit-panel').classList.remove('hidden');
+        }
+
+        function applyAdminChanges() {
+            const u = users.find(x => x.username === editingName);
+            u.balance = parseFloat(document.getElementById('adm-set-bal').value);
+            u.luckyTarget = parseInt(document.getElementById('adm-set-lucky').value);
+            
+            localStorage.setItem('platform_users', JSON.stringify(users));
+            if(currentUser && currentUser.username === editingName) {
+                currentUser = u;
+                updateUI();
             }
-
-            if(count >= 40) return showToast("Daily optimization limit reached!", "error");
-
-            // Lucky Order Logic
-            let isL = (lTarget !== 0 && count + 1 === lTarget);
-            let finalPrice = isL ? lPrice : price;
-
-            // Insufficient Balance (Lucky Order)
-            if(finalPrice > balance) {
-                balance -= finalPrice; updateUI();
-                alert("Lucky Order encounter! Insufficient balance. Negative assets detected. Please contact agent to recharge.");
-                navigateTo('cs-view'); return;
-            }
-
-            btn.innerText = "Processing..."; btn.disabled = true;
-            btn.style.opacity = "0.7";
-
-            setTimeout(() => {
-                count++; 
-                // Lucky order gives 15% comm, normal gives 0.5%
-                let currentRate = isL ? (lRate/100) : 0.005;
-                let comm = finalPrice * currentRate;
-                profit += comm; balance += comm;
-                
-                updateUI(); 
-                btn.innerText = "DONE ✓"; 
-                btn.style.background = "#14b8a6";
-                btn.style.opacity = "1";
-                if(isL) alert(`Congratulations! You complete a Lucky Order with ${lRate}% commission!`);
-            }, 900);
+            showToast("User Data Updated!");
+            loadAdminUserList();
+            document.getElementById('edit-panel').classList.add('hidden');
         }
 
-        // Payments
-        function handleDeposit() {
-            showToast("Deposit request received! Waiting for blockchain confirmation.", "success");
-            navigateTo('home-view');
-        }
-
-        function handleWithdraw() {
-            let a = parseFloat(document.getElementById('w-amount').value);
-            if(!a || a < 100 || a > balance) return showToast("Invalid withdrawal amount!", "error");
-            balance -= a; updateUI();
-            showToast("Withdrawal request submitted successfully!", "success");
-            navigateTo('home-view');
-        }
-
-        // Admin functions
-        function saveAdmin() {
-            lTarget = parseInt(document.getElementById('adm-target').value || 0);
-            lPrice = parseFloat(document.getElementById('adm-price').value || 0);
-            lRate = parseFloat(document.getElementById('adm-rate').value || 15);
-            showToast("Lucky Settings Updated!", "success"); navigateTo('home-view');
-        }
-
-        function updateBal() {
-            balance = parseFloat(document.getElementById('adm-bal').value || 0);
-            updateUI(); showToast("User Balance Updated!", "success"); navigateTo('home-view');
-        }
-
-        // UI Update
         function updateUI() {
-            const bt = document.getElementById('balance-txt');
-            bt.innerText = `$ ${balance.toFixed(2)}`;
-            bt.style.color = balance < 0 ? "#ff4d4d" : "white"; // Red color if negative
-            
-            document.getElementById('w-bal-txt').innerText = `$ ${balance.toFixed(2)}`;
-            document.getElementById('w-bal-txt').style.color = balance < 0 ? "#ff4d4d" : "#005a7d";
-            
-            document.getElementById('profit-txt').i
+            if(!currentUser) return;
+            document.getElementById('balance-txt').innerText = `$ ${currentUser.balance.toFixed(2)}`;
+            document.getElementById('balance-txt').style.color = currentUser.balance < 0 ? "#ff4d4d" : "white";
+        }
+
+        // Hidden Entry: Click Username in Profile 5 times to enter Backend
+        let clicks = 0;
+        document.addEventListener('click', (e) => {
+            if(e.target.id === 'u-name') {
+                clicks++; if(clicks >= 5) { clicks = 0; navigateTo('admin-view'); }
+            }
+        });
+    </script>
+</body>
+</html>
